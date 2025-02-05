@@ -4,7 +4,6 @@ import com.CodeSageLk.Blog.domain.dtos.CategoryDto;
 import com.CodeSageLk.Blog.domain.dtos.CreateCategoryRequests;
 import com.CodeSageLk.Blog.domain.entities.Category;
 import com.CodeSageLk.Blog.mappers.CategoryMapper;
-import com.CodeSageLk.Blog.services.CategoryService;
 import com.CodeSageLk.Blog.services.impl.CategoryServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
