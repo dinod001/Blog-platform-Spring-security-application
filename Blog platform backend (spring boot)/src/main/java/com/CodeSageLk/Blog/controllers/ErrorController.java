@@ -43,7 +43,6 @@ public class ErrorController {
                 .build();
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
-
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ApiErrorResponse> handleBadCredentialsException(BadCredentialsException ex) {
         ApiErrorResponse error = ApiErrorResponse.builder()

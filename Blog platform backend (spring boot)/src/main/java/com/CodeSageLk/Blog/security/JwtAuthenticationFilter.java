@@ -1,4 +1,4 @@
-package com.CodeSageLk.Blog.Security;
+package com.CodeSageLk.Blog.security;
 
 import com.CodeSageLk.Blog.services.AuthenticationService;
 import jakarta.servlet.FilterChain;
@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,40 +17,38 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
     private final AuthenticationService authenticationService;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             String token = extractToken(request);
-
             if (token != null) {
                 UserDetails userDetails = authenticationService.validateToken(token);
+                UsernamePasswordAuthenticationToken authenticationToken =
+                        new UsernamePasswordAuthenticationToken
+                                (userDetails, null, userDetails.getAuthorities());
 
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(
-                                userDetails,
-                                null,
-                                userDetails.getAuthorities()
-                        );
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-
-                // Add userId to request attributes for controller access
-                if (userDetails instanceof BlogUserDetails) {
-                    request.setAttribute("userId", ((BlogUserDetails) userDetails).getId());
+                //once the user was authenticated we can grab the id and set it to reques
+                //this will help in controller layer when we want to access id of that user
+                if (userDetails instanceof BlogUserDetails){
+                    request.setAttribute("user", ((BlogUserDetails) userDetails).id());
                 }
             }
         } catch (Exception e) {
-            // Don't throw exceptions here - just don't authenticate the request
+            //donot throw anythung just let it flow to next filter
             log.warn("Received invalid auth token");
         }
-
         filterChain.doFilter(request, response);
+
     }
+
     private String extractToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
+        String authToken = request.getHeader("Authorization");
+        if (authToken != null && authToken.startsWith("Bearer ")) {
+           return authToken.substring(7);
         }
         return null;
     }

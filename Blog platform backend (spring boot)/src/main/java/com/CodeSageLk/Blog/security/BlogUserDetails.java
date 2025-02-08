@@ -1,4 +1,4 @@
-package com.CodeSageLk.Blog.Security;
+package com.CodeSageLk.Blog.security;
 
 import com.CodeSageLk.Blog.domain.entities.User;
 import lombok.Getter;
@@ -9,12 +9,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @RequiredArgsConstructor
 public class BlogUserDetails implements UserDetails {
-    private final User user;
 
+    private final User user;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_USER"));
@@ -50,7 +51,7 @@ public class BlogUserDetails implements UserDetails {
         return true;
     }
 
-    public Object getId() {
+    public UUID id(){
         return user.getId();
     }
 }
