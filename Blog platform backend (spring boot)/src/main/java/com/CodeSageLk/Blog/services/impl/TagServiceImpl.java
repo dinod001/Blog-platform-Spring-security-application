@@ -3,6 +3,7 @@ package com.CodeSageLk.Blog.services.impl;
 import com.CodeSageLk.Blog.domain.entities.Tag;
 import com.CodeSageLk.Blog.domain.repositories.TagRepo;
 import com.CodeSageLk.Blog.services.TagService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,21 @@ public class TagServiceImpl implements TagService {
                 throw new IllegalStateException("Cannot delete tag with posts");
             }
         });
+    }
+
+    @Override
+    public Tag getTagById(UUID tagId) {
+        return tagRepo.findById(tagId).orElseThrow(()->
+                new EntityNotFoundException("Tag not sound"));
+    }
+
+    @Override
+    public List<Tag> getTagByIds(Set<UUID> tagIds) {
+        List<Tag> allIds = tagRepo.findAllById(tagIds);
+        if (allIds.size()!=tagIds.size()){
+            throw new EntityNotFoundException("All Tag not sound");
+        }
+        return allIds;
     }
 
 }

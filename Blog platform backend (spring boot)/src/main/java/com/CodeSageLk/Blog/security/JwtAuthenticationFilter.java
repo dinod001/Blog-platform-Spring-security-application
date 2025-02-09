@@ -34,7 +34,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 //once the user was authenticated we can grab the id and set it to reques
                 //this will help in controller layer when we want to access id of that user
                 if (userDetails instanceof BlogUserDetails){
-                    request.setAttribute("user", ((BlogUserDetails) userDetails).id());
+                    request.setAttribute("id", ((BlogUserDetails) userDetails).id());
                 }
             }
         } catch (Exception e) {

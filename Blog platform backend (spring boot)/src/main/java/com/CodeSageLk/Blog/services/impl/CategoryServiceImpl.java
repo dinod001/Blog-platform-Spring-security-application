@@ -3,6 +3,7 @@ package com.CodeSageLk.Blog.services.impl;
 import com.CodeSageLk.Blog.domain.entities.Category;
 import com.CodeSageLk.Blog.domain.repositories.CategoryRepo;
 import com.CodeSageLk.Blog.services.CategoryService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,12 @@ public class CategoryServiceImpl implements CategoryService {
             }
             categoryRepo.deleteById(id);
         }
+    }
+
+    @Override
+    public Category getCategoryById(UUID id) {
+        return categoryRepo.findById(id).orElseThrow(()->
+                new EntityNotFoundException("Category not found"));
     }
 
 }
